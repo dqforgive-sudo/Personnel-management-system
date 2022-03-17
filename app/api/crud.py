@@ -25,23 +25,21 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_user(db: Session, user: schemas.UserCreate):
-    db_user = models.User(domain_id=user.domain_id,domain=user.domain,email=user.email, name=user.name)
+    db_user = models.User(domain_id=user.domain_id, domain=user.domain, email=user.email, name=user.name)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
 
-def update_user(db: Session, domain: str, update_user: schemas.UserUpdate):
-    db_user = db.query(models.User).filter(models.User.domain == domain).first()
-    if db_user:
-        update_dict = update_user.dict(exclude_unset=True)
-        for k, v in update_dict.items():
-            setattr(db_user, k, v)
+def update_user(db: Session, domain: str, update_user: str):
+    db_user_id = db.query(models.User).filter(models.User.domain == domain).first().domain_id
+    user_id = db.query(models.User).filter(models.User.domain == update_user).first().domain_id
+    up_user = db.query(models.Item).filter(models.Item.owner_id == db_user_id).all()
+    for i in up_user:
+        i.owner_id = user_id
         db.commit()
-        db.flush()
-        db.refresh(db_user)
-        return db_user
+    return i
 
 
 def delete_user(db: Session, domain: str):

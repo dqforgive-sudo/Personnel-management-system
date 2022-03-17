@@ -53,8 +53,8 @@ def delete_user(domain: str, db: Session = Depends(get_db)):
     return db_user
 
 # 根据域账号更新员工信息
-@app.put("/users/{domain}", response_model=schemas.User)
-def update_user(domain: str, update_user: schemas.UserUp, db: Session = Depends(get_db)):
+@app.put("/users/{domain}", response_model=schemas.Item)
+def update_user(domain: str, update_user: str, db: Session = Depends(get_db)):
     updated_user = crud.update_user(db, domain, update_user)
     if updated_user is None:
         raise HTTPException(status_code=404, detail="User not found")
