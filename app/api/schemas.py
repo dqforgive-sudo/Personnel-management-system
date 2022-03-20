@@ -81,9 +81,3 @@ class AdminBase(BaseModel):
     username:str
     passwd:str
 
-
-class Admin(AdminBase):
-    admin_id:int
-
-    class Config:
-        orm_mode = True

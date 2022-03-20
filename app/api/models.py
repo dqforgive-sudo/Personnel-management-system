@@ -53,12 +53,3 @@ class Admin(Base):
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-class Admin(Base):
-    __tablename__ = "admin"
-
-    admin_id = Column(Integer,primary_key=True)
-    username = Column(String(50))
-    passwd = Column(String(200))
-
-    def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
