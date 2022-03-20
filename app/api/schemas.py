@@ -9,14 +9,17 @@
 =================================================='''
 from typing import List
 
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 
 
 class ItemBase(BaseModel):
     domain_id:int
     name: str
     domain:str
-    description: str = None
+    email:str
+    phone:str = Field(...,regex="^1",max_length=11,min_length=11)
+    is_active: bool = True
+    owner_name:str
 
 
 class ItemCreate(ItemBase):
@@ -28,7 +31,7 @@ class ItemUpdate(ItemBase):
 
 
 class Item(ItemBase):
-    owner_id: int
+    owner_name: str
 
     class Config:
         orm_mode = True
@@ -39,6 +42,7 @@ class UserBase(BaseModel):
     domain:str
     name: str
     email: str
+    phone:str = Field(...,regex="^1",max_length=11,min_length=11)
 
 
 class UserCreate(UserBase):
@@ -56,8 +60,30 @@ class UserUpdate(UserBase):
 
 
 class User(UserBase):
-    is_active: bool
+    is_active: bool = True
     items: List[Item] = []
+
+    class Config:
+        orm_mode = True
+
+class AdminBase(BaseModel):
+    username:str
+    passwd:str
+
+
+class Admin(AdminBase):
+    admin_id:int
+
+    class Config:
+        orm_mode = True
+
+class AdminBase(BaseModel):
+    username:str
+    passwd:str
+
+
+class Admin(AdminBase):
+    admin_id:int
 
     class Config:
         orm_mode = True
